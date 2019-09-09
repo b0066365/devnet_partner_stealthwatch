@@ -1,0 +1,368 @@
+{
+	"info": {
+		"_postman_id": "ae6aad9b-20b6-4ba8-883b-4aba0c26527f",
+		"name": "DevNet - Stealthwatch Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "{{SWATCH_User}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{SWATCH_PWD}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/token/v2/authenticate",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"token",
+						"v2",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02_Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userName\": \"devnet\",\n  \"fullName\": \"DevNet User\",\n  \"emailAddress\": \"devnet@topgun.cisco.com\",\n  \"authenticationServiceName\": \"local\",\n  \"dataRoleId\": 1,\n  \"functionRoleIds\": [0],\n  \"webFunctionRoleIds\": [1],\n  \"password\": \"devnet123\",\n  \"isAdmin\": true\n}"
+				},
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/smc-users/rest/v1/user",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"smc-users",
+						"rest",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03_Get Users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/smc-users/rest/v1/users",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"smc-users",
+						"rest",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04_Login DevNet User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "{{SWATCH_User}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{SWATCH_PWD}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/token/v2/authenticate",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"token",
+						"v2",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05_Get Tenants",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6604ad9-d6c1-4280-a20c-d5ad787ef43f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"SWATCH_Tenant\", jsonData.data[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/sw-reporting/v1/tenants",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"sw-reporting",
+						"v1",
+						"tenants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06_Get Host Groups",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6604ad9-d6c1-4280-a20c-d5ad787ef43f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"SWATCH_ParentGroup\", jsonData.data[1].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/smc-configuration/rest/v1/tenants/{{SWATCH_Tenant}}/tags",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"smc-configuration",
+						"rest",
+						"v1",
+						"tenants",
+						"{{SWATCH_Tenant}}",
+						"tags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07_Create DevNet Host Groups",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6604ad9-d6c1-4280-a20c-d5ad787ef43f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " [\n \t{\n    \t\"name\": \"DevNet_Grp-1\",\n    \t\"location\": \"INSIDE\",\n    \t\"description\": \"Host Group for User Devices\",\n    \t\"ranges\": [\"11.205.0.1/32\"],\n    \t\"hostBaselines\": false,\n    \t\"suppressExcludedServices\": true,\n    \t\"inverseSuppression\": false,\n    \t\"hostTrap\": false,\n    \t\"sendToCta\": false,\n    \t\"parentId\": {{SWATCH_ParentGroup}}\n\t},\n \t{\n    \t\"name\": \"DevNet_Grp-2\",\n    \t\"location\": \"INSIDE\",\n    \t\"description\": \"Host Group for User Devices\",\n    \t\"ranges\": [\"11.205.0.2/32\"],\n    \t\"hostBaselines\": false,\n    \t\"suppressExcludedServices\": true,\n    \t\"inverseSuppression\": false,\n    \t\"hostTrap\": false,\n    \t\"sendToCta\": false,\n    \t\"parentId\": {{SWATCH_ParentGroup}}\n\t}\n ]"
+				},
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/smc-configuration/rest/v1/tenants/{{SWATCH_Tenant}}/tags",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"smc-configuration",
+						"rest",
+						"v1",
+						"tenants",
+						"{{SWATCH_Tenant}}",
+						"tags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08_Get Custom Security Events",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6604ad9-d6c1-4280-a20c-d5ad787ef43f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"SWATCH_ParentGroup\", jsonData.data[1].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/smc-configuration/rest/v1/tenants/{{SWATCH_Tenant}}/policy/customEvents",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"smc-configuration",
+						"rest",
+						"v1",
+						"tenants",
+						"{{SWATCH_Tenant}}",
+						"policy",
+						"customEvents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09_Create Custom Security Event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6604ad9-d6c1-4280-a20c-d5ad787ef43f",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"DevNet_CSE-01\",\n    \"summary\": \"When any host within DevNet_Grp-1 communicates with any host within DevNet_Grp-2; through 5101/tcp, an alarm is raised.\",\n    \"timestamp\": \"2019-09-09T11:42:38.625+0000\",\n    \"subject\": {\n        \"orientation\": \"either\",\n        \"tags\": {\n            \"excludes\": [],\n            \"includes\": [\n                2057\n            ]\n        }\n    },\n    \"peer\": {\n        \"portProtocols\": {\n            \"excludes\": [],\n            \"includes\": [\n                \"5101/tcp\"\n            ]\n        },\n        \"tags\": {\n            \"excludes\": [],\n            \"includes\": [\n                2058\n            ]\n        }\n    },\n    \"connection\": {}\n}"
+				},
+				"url": {
+					"raw": "https://{{SWATCH_IP}}/smc-configuration/rest/v1/tenants/{{SWATCH_Tenant}}/policy/customEvents",
+					"protocol": "https",
+					"host": [
+						"{{SWATCH_IP}}"
+					],
+					"path": [
+						"smc-configuration",
+						"rest",
+						"v1",
+						"tenants",
+						"{{SWATCH_Tenant}}",
+						"policy",
+						"customEvents"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
